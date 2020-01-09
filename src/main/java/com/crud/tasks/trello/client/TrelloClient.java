@@ -20,7 +20,6 @@ import java.util.*;
 
 import static java.util.Optional.ofNullable;
 
-@CrossOrigin("*")
 @Component
 public class TrelloClient {
 
