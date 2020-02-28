@@ -4,13 +4,10 @@ import com.crud.tasks.domain.*;
 import com.crud.tasks.mapper.TrelloMapper;
 import com.crud.tasks.service.TrelloService;
 import com.crud.tasks.trello.validator.TrelloValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class TrelloFacade {
@@ -30,6 +27,6 @@ public class TrelloFacade {
     public CreatedTrelloCardDto createCard(final TrelloCardDto trelloCardDto) {
         TrelloCard trelloCard = trelloMapper.mapToCard(trelloCardDto);
         trelloValidator.valideteCard(trelloCard);
-        return trelloService.createdTrelloCard(trelloMapper.maptToCardDto(trelloCard));
+        return trelloService.createdTrelloCard(trelloMapper.mapToCardDto(trelloCard));
     }
 }
