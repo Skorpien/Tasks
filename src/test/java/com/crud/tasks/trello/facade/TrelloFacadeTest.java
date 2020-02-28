@@ -1,9 +1,6 @@
 package com.crud.tasks.trello.facade;
 
-import com.crud.tasks.domain.TrelloBoard;
-import com.crud.tasks.domain.TrelloBoardDto;
-import com.crud.tasks.domain.TrelloList;
-import com.crud.tasks.domain.TrelloListDto;
+import com.crud.tasks.domain.*;
 import com.crud.tasks.mapper.TrelloMapper;
 import com.crud.tasks.service.TrelloService;
 import com.crud.tasks.trello.validator.TrelloValidator;
@@ -17,7 +14,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
@@ -101,5 +97,42 @@ public class TrelloFacadeTest {
                     Assert.assertEquals(false, trelloListDto.isClosed());
                 });
         });
+    }
+
+    @Test
+    public void shouldCreateCard() {
+        //Given
+        TrelloCardDto trelloCardDto = new TrelloCardDto("nameDto", "descDto", "posDto", "listIdDto");
+        TrelloCard trelloCard = new TrelloCard("name", "desc", "pos", "listId");
+        CreatedTrelloCardDto createdTrelloCardDto = new CreatedTrelloCardDto("id", "mame", "shortUrl", null);
+
+        when(trelloMapper.mapToCard(trelloCardDto)).thenReturn(trelloCard);
+        when(trelloService.createTrelloCard(trelloMapper.mapToCardDto(trelloCard))).thenReturn(createdTrelloCardDto);
+
+        //When
+        CreatedTrelloCardDto trelloCardDtos = trelloFacade.createCard(trelloCardDto);
+
+        //Then
+        Assert.assertNotNull(trelloCardDtos);
+        Assert.assertEquals(createdTrelloCardDto.getId(), trelloCardDtos.getId());
+        Assert.assertEquals(createdTrelloCardDto.getName(), trelloCardDtos.getName());
+        Assert.assertEquals(createdTrelloCardDto.getShortUrl(), trelloCardDtos.getShortUrl());
+    }
+    @Test
+    public void shouldCreateEmptyCard() {
+        //Given
+        TrelloCardDto trelloCardDto = new TrelloCardDto("nameDto", "descDto", "posDto", "listIdDto");
+        TrelloCard trelloCard = new TrelloCard("name", "desc", "pos", "listId");
+
+        when(trelloService.createTrelloCard(trelloMapper.mapToCardDto(trelloCard))).thenReturn(new CreatedTrelloCardDto());
+
+        //When
+        CreatedTrelloCardDto trelloCardDtos = trelloFacade.createCard(trelloCardDto);
+
+        //Then
+        Assert.assertNotNull(trelloCardDtos);
+        Assert.assertNull(trelloCardDtos.getId());
+        Assert.assertNull(trelloCardDtos.getName());
+        Assert.assertNull(trelloCardDtos.getShortUrl());
     }
 }
