@@ -2,6 +2,7 @@ package com.crud.tasks.service;
 
 import com.crud.tasks.config.AdminConfig;
 import com.crud.tasks.config.UserConfig;
+import com.crud.tasks.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class MailCreatorService {
     @Autowired
     @Qualifier("templateEngine")
     private TemplateEngine templateEngine;
+
+    @Autowired
+    private DbService dbService;
 
     public String buildTrelloCardEmail(String message) {
         List<String> functionality = new ArrayList<>();
@@ -46,4 +50,18 @@ public class MailCreatorService {
         return templateEngine.process("mail/created-trello-card-mail", context);
     }
 
+    public String buildScheduledEmail(String message) {
+        Context context = new Context();
+        context.setVariable("message", "Currently in database you got: " + message);
+        context.setVariable("tasks_url", "http://localhost:8888/tasks_frontend");
+        context.setVariable("button", "Kodilla CRUD App");
+        context.setVariable("tasks", dbService);
+
+        context.setVariable("regards", "Best regards");
+        context.setVariable("is_friend", true);
+        context.setVariable("admin_config", adminConfig);
+        context.setVariable("user_config", userConfig);
+
+        return templateEngine.process("mail/created-scheduled-mail", context);
+    }
 }
