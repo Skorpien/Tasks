@@ -20,19 +20,14 @@ public class TaskController {
     @Autowired
     private TaskMapper taskMapper;
 
-/*    @RequestMapping(method = RequestMethod.GET, value = "getById/{id}")
-    public TaskDto getById(@PathVariable Long id) {
-        return taskMapper.mapToTaskDto(service.findById(id));
-    }*/
-
     @RequestMapping(method = RequestMethod.GET, value = "/tasks")
     public List<TaskDto> getTasks() {
         return taskMapper.mapToTaskDtoList(service.getAllTasks());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/tasks/{taskId}")
-    public TaskDto getTask(@PathVariable Long taskId) throws TaskNotFoundException {
-        return taskMapper.mapToTaskDto(service.getTask(taskId).orElseThrow(TaskNotFoundException::new));
+    public TaskDto getTask(@PathVariable Long taskId) {
+        return taskMapper.mapToTaskDto(service.findById(taskId));
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/tasks/{taskId}")
